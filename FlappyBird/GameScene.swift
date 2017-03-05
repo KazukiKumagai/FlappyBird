@@ -31,7 +31,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var bestItemScoreLabelNode:SKLabelNode!
 
     // 再生データの作成.
-    let mySoundAction: SKAction = SKAction.playSoundFileNamed("coin01.mp3", waitForCompletion: true)
+    let mySoundAction: SKAction = SKAction.playSoundFileNamed("coin01.mp3", waitForCompletion: false)
 
     override func didMove(to view: SKView) {
         
@@ -234,18 +234,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 userDefaults.synchronize()
             }
         }else if(contact.bodyA.categoryBitMask & itemCategory) == itemCategory || (contact.bodyB.categoryBitMask & itemCategory) == itemCategory{
-            itemNode.removeAllChildren()
-            // 再生
+            //アイテムを削除する
+            //itemNode.removeAllChildren()
+            //効果音の再生
             self.run(mySoundAction);
             
-            print("ScoreUp")
+            print("ItemScoreUp")
             self.itemScore += 1
             itemScoreLabelNode.text = "Item Score:\(score)"
-            var bestItemScore = userDefaults.integer(forKey: "BESTITEM")
+            var bestItemScore = userDefaults.integer(forKey: "BEST_ITEM")
             if score > bestItemScore {
                 bestItemScore = score
                 bestItemScoreLabelNode.text = "Best Item Score:\(bestItemScore)"
-                userDefaults.set(bestItemScore, forKey: "BESTITEM")
+                userDefaults.set(bestItemScore, forKey: "BEST_ITEM")
                 userDefaults.synchronize()
             }
         }else{
@@ -313,15 +314,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         bestItemScoreLabelNode.horizontalAlignmentMode = SKLabelHorizontalAlignmentMode.left
         
         let bestScore = userDefaults.integer(forKey: "BEST")
-        let bestItemScore = userDefaults.integer(forKey: "BESTITEM")
+        let bestItemScore = userDefaults.integer(forKey: "BEST_ITEM")
         bestScoreLabelNode.text = "Best Score:\(bestScore)"
         bestItemScoreLabelNode.text = "Best Item Score:\(bestItemScore)"
         self.addChild(bestScoreLabelNode)
         self.addChild(bestItemScoreLabelNode)
     }
     
+    //アイテムをランラムで出現させる
     func setupItem(){
-
         // アイテムの画像を読み込む
         let itemTexture = SKTexture(imageNamed: "apple")
         itemTexture.filteringMode = SKTextureFilteringMode.linear
@@ -343,9 +344,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             let item = SKNode()
             item.position = CGPoint(x: self.frame.size.width + itemTexture.size().width / 2, y: 0.0)
-            //item.zPosition = -50.0 // 雲より手前、地面より奥
-            
-            // 1〜random_y_rangeまでのランダムな整数を生成
+        
             let random_y = arc4random_uniform( UInt32(self.frame.size.height) )
         
             let sprite = SKSpriteNode(texture: itemTexture)
@@ -359,10 +358,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.itemNode.addChild(item)
         })
         
-        // 次の壁作成までの待ち時間のアクションを作成
-        let waitAnimation = SKAction.wait(forDuration: 4.0)
-        
-        // 壁を作成->待ち時間->壁を作成を無限に繰り替えるアクションを作成
+        let waitAnimation = SKAction.wait(forDuration: 2.0)
+    
         let repeatForeverAnimation = SKAction.repeatForever(SKAction.sequence([createItemAnimation, waitAnimation]))
         
         itemNode.run(repeatForeverAnimation)
