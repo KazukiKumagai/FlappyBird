@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DA2699551E6C275B005DF98B /* coin01.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DA2699541E6C275B005DF98B /* coin01.mp3 */; };
 		DAF4AB0D1E596F8200159F91 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF4AB0C1E596F8200159F91 /* AppDelegate.swift */; };
 		DAF4AB0F1E596F8200159F91 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF4AB0E1E596F8200159F91 /* ViewController.swift */; };
 		DAF4AB121E596F8200159F91 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DAF4AB101E596F8200159F91 /* Main.storyboard */; };
@@ -17,6 +18,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		DA2699541E6C275B005DF98B /* coin01.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = coin01.mp3; path = ../../../../Downloads/coin01.mp3; sourceTree = "<group>"; };
 		DAF4AB091E596F8200159F91 /* FlappyBird.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlappyBird.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DAF4AB0C1E596F8200159F91 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DAF4AB0E1E596F8200159F91 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -60,6 +62,7 @@
 		DAF4AB0B1E596F8200159F91 /* FlappyBird */ = {
 			isa = PBXGroup;
 			children = (
+				DA2699541E6C275B005DF98B /* coin01.mp3 */,
 				DAF4AB0C1E596F8200159F91 /* AppDelegate.swift */,
 				DAF4AB0E1E596F8200159F91 /* ViewController.swift */,
 				DAF4AB101E596F8200159F91 /* Main.storyboard */,
@@ -140,6 +143,7 @@
 			files = (
 				DAF4AB171E596F8200159F91 /* LaunchScreen.storyboard in Resources */,
 				DAF4AB141E596F8200159F91 /* Assets.xcassets in Resources */,
+				DA2699551E6C275B005DF98B /* coin01.mp3 in Resources */,
 				DAF4AB121E596F8200159F91 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -313,6 +317,7 @@
 				DAF4AB1D1E596F8200159F91 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
