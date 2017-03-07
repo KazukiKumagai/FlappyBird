@@ -14,7 +14,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var wallNode:SKNode!
     var bird:SKSpriteNode!
     var itemNode:SKNode!
-    var appleNode:SKSpriteNode!
     
     let birdCategory:UInt32 = 1 << 0
     let groundCategory:UInt32 = 1 << 1
@@ -235,20 +234,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
         }else if(contact.bodyA.categoryBitMask & itemCategory) == itemCategory || (contact.bodyB.categoryBitMask & itemCategory) == itemCategory{
             //アイテムを削除する
-            //itemNode.removeAllChildren()
+            if let bodyANode = contact.bodyA.node {
+                bodyANode.removeFromParent()
+            }else if let bodyBNode = contact.bodyB.node {
+                bodyBNode.removeFromParent()
+            }
             //効果音の再生
             self.run(mySoundAction);
             
             print("ItemScoreUp")
             self.itemScore += 1
-            itemScoreLabelNode.text = "Item Score:\(score)"
+            itemScoreLabelNode.text = "Item Score:\(itemScore)"
             var bestItemScore = userDefaults.integer(forKey: "BEST_ITEM")
             if score > bestItemScore {
                 bestItemScore = score
                 bestItemScoreLabelNode.text = "Best Item Score:\(bestItemScore)"
                 userDefaults.set(bestItemScore, forKey: "BEST_ITEM")
                 userDefaults.synchronize()
-            }
+        }
         }else{
             print("Gameover")
             scrollNode.speed = 0
@@ -271,7 +274,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         bird.zRotation = 0.0
         
         wallNode.removeAllChildren()
-        itemNode.removeAllChildren()
+        //itemNode.removeAllChildren()
+        
         bird.speed = 1
         scrollNode.speed = 1
     }
@@ -295,7 +299,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         itemScoreLabelNode.zPosition = 100
         itemScoreLabelNode.fontSize = 20
         itemScoreLabelNode.horizontalAlignmentMode = SKLabelHorizontalAlignmentMode.left
-        itemScoreLabelNode.text = "Item Score:\(score)"
+        itemScoreLabelNode.text = "Item Score:\(itemScore)"
         self.addChild(itemScoreLabelNode)
         
         bestScoreLabelNode = SKLabelNode()
@@ -320,18 +324,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.addChild(bestScoreLabelNode)
         self.addChild(bestItemScoreLabelNode)
     }
-    
     //アイテムをランラムで出現させる
     func setupItem(){
         // アイテムの画像を読み込む
         let itemTexture = SKTexture(imageNamed: "apple")
         itemTexture.filteringMode = SKTextureFilteringMode.linear
-
+        
         // 移動する距離を計算
         let movingDistance = CGFloat(self.frame.size.width + itemTexture.size().width)
         
         // 画面外まで移動するアクションを作成
-        let moveItem = SKAction.moveBy(x: -movingDistance, y: 0, duration:3.0)
+        let moveItem = SKAction.moveBy(x: -movingDistance, y: 0, duration:2.0)
         
         // 自身を取り除くアクションを作成
         let removeItem = SKAction.removeFromParent()
@@ -342,24 +345,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // アイテムを生成するアクションを作成
         let createItemAnimation = SKAction.run({
             
-            let item = SKNode()
-            item.position = CGPoint(x: self.frame.size.width + itemTexture.size().width / 2, y: 0.0)
-        
             let random_y = arc4random_uniform( UInt32(self.frame.size.height) )
-        
+            
             let sprite = SKSpriteNode(texture: itemTexture)
-            sprite.position = CGPoint(x: 0.0, y: CGFloat(random_y))
-            item.addChild(sprite)
+            sprite.position = CGPoint(x: self.frame.size.width + itemTexture.size().width / 2, y: CGFloat(random_y))
+            self.itemNode.addChild(sprite)
             sprite.physicsBody = SKPhysicsBody(rectangleOf: itemTexture.size())
             sprite.physicsBody?.categoryBitMask = self.itemCategory
             sprite.physicsBody?.contactTestBitMask = self.birdCategory
             sprite.physicsBody?.isDynamic = false
-            item.run(itemAnimation)
-            self.itemNode.addChild(item)
+            sprite.run(itemAnimation)
+            
         })
         
-        let waitAnimation = SKAction.wait(forDuration: 2.0)
-    
+        let waitAnimation = SKAction.wait(forDuration: 1.0)
+        
         let repeatForeverAnimation = SKAction.repeatForever(SKAction.sequence([createItemAnimation, waitAnimation]))
         
         itemNode.run(repeatForeverAnimation)
